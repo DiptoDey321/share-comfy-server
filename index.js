@@ -18,25 +18,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try {
         const productsCollection = client.db("shareComfy").collection("products");
-
-
-        // // get all services 
-        // app.get('/products', async (req, res) => {
-        //     const query = {}
-        //     const cursor = productsCollection.find(query);
-        //     const products = await cursor.toArray();
-        //     res.send(products);
-        // });
-
+        
         // get all services 
         app.get('/products/:id', async (req, res) => {
             const category = req.params.id
-            console.log(category);
+            // console.log(category);
             const query = { category: category }
             const cursor = productsCollection.find(query);
             const products = await cursor.toArray();
             res.send(products);
         });
+            
 
     }
     finally{
