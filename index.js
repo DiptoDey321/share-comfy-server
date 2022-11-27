@@ -20,6 +20,22 @@ async function run(){
         const productsCollection = client.db("shareComfy").collection("products");
         const usersCollection = client.db("shareComfy").collection("users");
 
+        // ===========
+        //  ***JWT***
+        // =========== 
+        app.get('/jwt', async(req,res)=>{
+            const email = req.query.email;
+            const qwery = {email : email}
+            const user = await usersCollection.findOne()
+            if(user){
+                const token = jwt.sign({email},process.env.ACCESS_TOKEN, {expiresIn : '23h'})
+                return res.send({accessToken : token})
+            }
+            console.log(user);
+            res.status(403).send({accessToken : ''})
+            
+        })
+
         // add products to db 
         app.post('/products', async(req, res) =>{
             const product = req.body;
@@ -27,7 +43,7 @@ async function run(){
             res.send(result)
         })
         
-        // get products categorywise
+        // get products on categorise
         app.get('/products/:id', async (req, res) => {
             const category = req.params.id
             const query = { category: category }
@@ -36,10 +52,17 @@ async function run(){
             res.send(products);
         });
 
-        // insert users to bd 
+        // add users to db 
         app.post('/users',async (req,res) =>{
             const user = req.body;
             const result = await usersCollection.insertOne(user)
+            res.send(result)
+        })
+
+         // add bookingProduct to bd 
+         app.post('/bookingProducts',async (req,res) =>{
+            const bookedproduct = req.body;
+            const result = await bookProductsCollection.insertOne(bookedproduct)
             res.send(result)
         })
             
