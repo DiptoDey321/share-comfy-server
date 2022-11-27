@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
@@ -68,22 +68,21 @@ async function run(){
             res.send(result)
         })
 
-
-        // app.get('/bookingProducts',async (req,res) =>{
-        //     const query = {}
-        //     const cursor = bookProductsCollection.find(query);
-        //     const bookedCollection = await cursor.toArray();
-        //     res.send(bookedCollection)
-        // })
-
         // get bookingProduct to by email filtering 
         app.get('/bookingProducts/:id',async (req,res) =>{
             const email = req.params.id
-            console.log(email);
+            // console.log(email);
             const query = { customerEmail:email }
             const cursor = bookProductsCollection.find(query);
             const bookedCollection = await cursor.toArray();
             res.send(bookedCollection)
+        })
+
+        app.get('/booking/:id',async(req,res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) };
+            const bookedItems = await bookProductsCollection.findOne(query);
+            res.send(bookedItems);
         })
             
 
