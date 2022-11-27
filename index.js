@@ -3,6 +3,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
+const jwt = require('jsonwebtoken') 
 const port = process.env.port || 5000 ;
 
 
@@ -19,6 +20,7 @@ async function run(){
     try {
         const productsCollection = client.db("shareComfy").collection("products");
         const usersCollection = client.db("shareComfy").collection("users");
+        const bookProductsCollection = client.db("shareComfy").collection("bookproduct");
 
         // ===========
         //  ***JWT***
@@ -36,14 +38,14 @@ async function run(){
             
         })
 
-        // add products to db 
+        // products add to db 
         app.post('/products', async(req, res) =>{
             const product = req.body;
             const result = await productsCollection.insertOne(product)
             res.send(result)
         })
         
-        // get products on categorise
+        //  products get categorywise
         app.get('/products/:id', async (req, res) => {
             const category = req.params.id
             const query = { category: category }
@@ -52,19 +54,20 @@ async function run(){
             res.send(products);
         });
 
-        // add users to db 
+        // add users to bd 
         app.post('/users',async (req,res) =>{
             const user = req.body;
             const result = await usersCollection.insertOne(user)
             res.send(result)
         })
 
-         // add bookingProduct to bd 
-         app.post('/bookingProducts',async (req,res) =>{
+        // add bookingProduct to bd 
+        app.post('/bookingProducts',async (req,res) =>{
             const bookedproduct = req.body;
             const result = await bookProductsCollection.insertOne(bookedproduct)
             res.send(result)
         })
+
 
         // app.get('/bookingProducts',async (req,res) =>{
         //     const query = {}
