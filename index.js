@@ -5,6 +5,7 @@ const cors = require('cors')
 require('dotenv').config()
 const jwt = require('jsonwebtoken') 
 const port = process.env.port || 5000 ;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 app.use(cors())
@@ -21,6 +22,23 @@ async function run(){
         const productsCollection = client.db("shareComfy").collection("products");
         const usersCollection = client.db("shareComfy").collection("users");
         const bookProductsCollection = client.db("shareComfy").collection("bookproduct");
+
+        app.get('/create-payment-intent', async(req,res)=>{
+            const booking = req.body;
+            const price = booking.price;
+            const amount= price*100;
+
+            const paymentIntent = await stripe.paymentIntents.create({
+                currency : 'usd',
+                amount : amount,
+                "payment_method_types ": [
+                    "card"
+                ]
+            })
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        })
 
         // ===========
         //  ***JWT***
