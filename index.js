@@ -65,6 +65,23 @@ async function run(){
             const result = await bookProductsCollection.insertOne(bookedproduct)
             res.send(result)
         })
+
+        // app.get('/bookingProducts',async (req,res) =>{
+        //     const query = {}
+        //     const cursor = bookProductsCollection.find(query);
+        //     const bookedCollection = await cursor.toArray();
+        //     res.send(bookedCollection)
+        // })
+
+        // get bookingProduct to by email filtering 
+        app.get('/bookingProducts/:id',async (req,res) =>{
+            const email = req.params.id
+            console.log(email);
+            const query = { customerEmail:email }
+            const cursor = bookProductsCollection.find(query);
+            const bookedCollection = await cursor.toArray();
+            res.send(bookedCollection)
+        })
             
 
     }
