@@ -103,7 +103,7 @@ async function run(){
             res.send(result)
         })
 
-        // get all services 
+        // get all advertise product 
       app.get('/avertise', async (req, res) => {
         const query = {}
         const cursor = advertisCollection.find(query);
@@ -128,7 +128,7 @@ async function run(){
         });
 
          // added  products get for specific user
-         app.get('/userProducts/:id', verifyJWT, async (req, res) => {
+         app.get('/userProducts/:id', async (req, res) => {
             const user_email = req.params.id
             const query = { email: user_email }
             const cursor = productsCollection.find(query);
