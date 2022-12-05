@@ -190,8 +190,9 @@ async function run(){
         })
 
         // add bookingProduct to bd 
-        app.post('/bookingProducts', verifyJWT ,async (req,res) =>{
+        app.post('/bookingProducts' ,async (req,res) =>{
             const bookedproduct = req.body;
+            console.log(bookedproduct);
             const result = await bookProductsCollection.insertOne(bookedproduct)
             res.send(result)
         })
